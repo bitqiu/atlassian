@@ -1,0 +1,51 @@
+version: '3'
+services:
+  jira:
+    build: 
+      context: ./jira
+    container_name: jira
+    environment:
+      - TZ=Asia/Shanghai
+#      - JVM_MINIMUM_MEMORY=1g
+#      - JVM_MAXIMUM_MEMORY=12g
+#      - JVM_CODE_CACHE_ARGS='-XX:InitialCodeCacheSize=1g -XX:ReservedCodeCacheSize=8g'
+    # depends_on:
+    #   - mysql
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/jira:/var/jira
+    restart: always
+
+  confluence:
+    build: 
+      context: ./confluence
+    container_name: confluence
+    environment:
+      - TZ=Asia/Shanghai
+    #      - JVM_MINIMUM_MEMORY=1g
+    #      - JVM_MAXIMUM_MEMORY=12g
+    #      - JVM_CODE_CACHE_ARGS='-XX:InitialCodeCacheSize=1g -XX:ReservedCodeCacheSize=8g'
+    # depends_on:
+    #   - mysql
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data/confluence:/var/confluence
+    restart: always
+
+  mysql:
+    image: mysql:8
+    environment:
+      - TZ=Asia/Shanghai
+      # - MYSQL_DATABASE=jira
+      - MYSQL_ROOT_PASSWORD=root
+      # - MYSQL_USER=jira
+      # - MYSQL_PASSWORD=123123
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_bin']
+#    ports:
+#      - "13306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    restart: always
+ 
